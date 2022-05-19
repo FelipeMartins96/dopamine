@@ -28,6 +28,7 @@ from dopamine.labs.sac_from_pixels import deepmind_control_lib
 from flax.metrics import tensorboard
 import gin
 from gym import spaces
+from dopamine.metrics import collector_dispatcher
 
 
 
@@ -160,6 +161,15 @@ class ContinuousRunner(base_run_experiment.Runner):
     self._agent = create_agent_fn(self._environment,
                                   summary_writer=self._summary_writer)
     self._initialize_checkpointer_and_maybe_resume(checkpoint_file_prefix)
+
+    # Create a collector dispatcher for metrics reporting.
+    self._collector_dispatcher = collector_dispatcher.CollectorDispatcher(
+        self._base_dir)
+    set_collector_dispatcher_fn = getattr(
+        self._agent, 'set_collector_dispatcher', None)
+    if callable(set_collector_dispatcher_fn):
+      set_collector_dispatcher_fn(self._collector_dispatcher)
+
 
   def _save_tensorboard_summaries(self, iteration,
                                   num_episodes_train,
