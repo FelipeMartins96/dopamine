@@ -33,6 +33,7 @@ import math
 from dopamine.discrete_domains import atari_lib
 import gin
 import gym
+import rsoccer_gym
 from gym.wrappers.time_limit import TimeLimit
 import numpy as np
 import tensorflow as tf
